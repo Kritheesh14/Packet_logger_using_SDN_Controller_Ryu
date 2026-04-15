@@ -81,17 +81,3 @@ To clear all graphs and logs back to zero, simply restart the Ryu controller:
 3.  Run `ryu-manager controller/p_log.py` again.
 ```
 
----
-
-### How to use this:
-1.  **Create the file:** `nano DASHBOARD_GUIDE.md`
-2.  **Take your screenshot:** While the dashboard is running and full of data, take a screenshot of your browser.
-3.  **Save the image:** Create a folder `mkdir -p screenshots` and save the image there as `dashboard_view.png`.
-4.  **Add to Git:** ```bash
-    git add DASHBOARD_GUIDE.md screenshots/dashboard_view.png
-    git commit -m "Added dashboard documentation and screenshots"
-    ```
-
-
-
-This guide is particularly useful for your **CSE project submissions** because it shows the examiner exactly how to interact with the software you built!
