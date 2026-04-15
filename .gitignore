@@ -1,1 +1,8 @@
+# Python
+__pycache__/
+*.py[cod]
+ryu-vm/
+ryu-project/
 
+# OS
+.DS_Store
