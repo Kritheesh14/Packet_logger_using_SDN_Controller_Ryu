@@ -1,1 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>SDN Packet Logger Dashboard</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #121212; color: white; padding: 20px; }
+        .container { max-width: 1000px; margin: auto; }
+        .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 15px; margin-bottom: 30px; }
+        .stat-card { background: #1e1e1e; padding: 20px; border-radius: 10px; text-align: center; border: 1px solid #333; }
+        .stat-card h2 { margin: 0; color: #bb86fc; font-size: 2em; }
+        .stat-card p { margin: 5px 0 0; color: #aaa; text-transform: uppercase; font-size: 0.8em; }
+        .chart-container { background: #1e1e1e; padding: 20px; border-radius: 10px; margin-bottom: 30px; border: 1px solid #333; height: 300px; }
+        table { width: 100%; border-collapse: collapse; background: #1e1e1e; border-radius: 10px; overflow: hidden; }
+        th, td { padding: 12px; text-align: left; border-bottom: 1px solid #333; }
+        th { background: #333; color: #03dac6; }
+        tr:hover { background: #252525; }
+        .proto-badge { padding: 4px 8px; border-radius: 5px; font-weight: bold; font-size: 0.8em; }
+        .TCP { background: #03dac6; color: black; }
+        .UDP { background: #cf6679; color: white; }
+        .ICMP { background: #bb86fc; color: white; }
+        .ARP { background: #ffb74d; color: black; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>SDN Live Traffic Monitor</h1>
+        
+        <div class="stats-grid">
+            <div class="stat-card"><h2 id="total-pkts">0</h2><p>Total Packets</p></div>
+            <div class="stat-card"><h2 id="icmp-pkts">0</h2><p>ICMP (Ping)</p></div>
+            <div class="stat-card"><h2 id="arp-pkts">0</h2><p>ARP</p></div>
+            <div class="stat-card"><h2 id="other-pkts">0</h2><p>Other</p></div>
+        </div>
+
+        <div class="chart-container">
+            <canvas id="packetChart"></canvas>
+        </div>
+
+        <h2>Recent Logs</h2>
+        <table id="log-table">
+            <thead>
+                <tr>
+                    <th>Time</th>
+                    <th>Protocol</th>
+                    <th>Source MAC</th>
+                    <th>Destination MAC</th>
+                </tr>
+            </thead>
+            <tbody id="log-body"></tbody>
+        </table>
+    </div>
+
+    <script>
+        const ctx = document.getElementById('packetChart').getContext('2d');
+        const packetChart = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: ['TCP', 'UDP', 'ICMP', 'ARP', 'OTHER'],
+                datasets: [{
+                    label: '# of Packets',
+                    data: [0, 0, 0, 0, 0],
+                    backgroundColor: ['#03dac6', '#cf6679', '#bb86fc', '#ffb74d', '#777']
+                }]
+            },
+            options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } } }
+        });
+
+        async function updateDashboard() {
+            try {
+                const response = await fetch('http://127.0.0.1:8080/stats');
+                const data = await response.json();
+
+                // Update Stats Cards
+                document.getElementById('total-pkts').innerText = data.stats.total;
+                document.getElementById('icmp-pkts').innerText = data.stats.ICMP;
+                document.getElementById('arp-pkts').innerText = data.stats.ARP;
+                document.getElementById('other-pkts').innerText = data.stats.OTHER;
+
+                // Update Chart
+                packetChart.data.datasets[0].data = [
+                    data.stats.TCP, data.stats.UDP, data.stats.ICMP, data.stats.ARP, data.stats.OTHER
+                ];
+                packetChart.update();
+
+                // Update Table
+                const tbody = document.getElementById('log-body');
+                tbody.innerHTML = data.logs.map(log => `
+                    <tr>
+                        <td>${log.ts}</td>
+                        <td><span class="proto-badge ${log.proto}">${log.proto}</span></td>
+                        <td>${log.src}</td>
+                        <td>${log.dst}</td>
+                    </tr>
+                `).join('');
+
+            } catch (err) {
+                console.error("Controller not reaching. Is ryu-manager running?", err);
+            }
+        }
+
+        setInterval(updateDashboard, 2000);
+        updateDashboard();
+    </script>
+</body>
+</html>
 
