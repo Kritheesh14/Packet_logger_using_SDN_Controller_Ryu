@@ -1,4 +1,4 @@
-# 🛠️ Detailed Setup & Installation Guide
+# Detailed Setup & Installation Guide
 
 This guide covers the exact steps required to set up a stable environment for the Ryu Controller and Mininet on modern Linux distributions (Ubuntu 22.04+ / WSL2). 
 
