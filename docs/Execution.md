@@ -92,7 +92,10 @@ Generates spikes in the **Coral/Red** bar. Simulates a 5Mbps video stream.
 # Run a 10-second UDP stream at 5 Megabits per second
 mininet> h1 iperf -u -c h2 -b 5M -t 10
 ```
-
+In case connection isnt established, run :
+```bash
+h3 iperf -s &
+```
 -----
 
 ## How to Properly Shutdown
