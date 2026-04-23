@@ -1,4 +1,4 @@
-# Running the SDN Stack
+# Running the SDN Stack/ Standard Operating Procedure [SOP]
 
 Follow these steps exactly to orchestrate the Controller, the Network, and the Dashboard. 
 
