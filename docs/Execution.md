@@ -100,11 +100,17 @@ h3 iperf -s &
 
 
 ## Obtaining Flow tables
-Considering both the terminals are open [controller and emulator, where controller is running the _p_log.py_ file and the emulator is running mininet], run this in terminal : 
+Considering both the terminals are open [controller and emulator, where controller is running the _p_log.py_ file and the emulator is running mininet], run this in the 3rd terminal : 
 
 ```bash
 sudo ovs-ofctl -O OpenFlow13 dump-flows s1
 ```
+
+If you want to capture a live view, run this in another terminal :
+```bash
+watch -n 1 "sudo ovs-ofctl -O OpenFlow13 dump-flows s1"
+```
+
 ---
 
 ## How to Properly Shutdown
