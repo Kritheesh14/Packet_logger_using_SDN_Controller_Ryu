@@ -98,6 +98,15 @@ h3 iperf -s &
 ```
 -----
 
+
+## Obtaining Flow tables
+Considering both the terminals are open [controller and emulator, where controller is running the _p_log.py_ file and the emulator is running mininet], run this in terminal : 
+
+```bash
+sudo ovs-ofctl -O OpenFlow13 dump-flows s1
+```
+---
+
 ## How to Properly Shutdown
 
 1.  **Mininet:** Type `exit` in Terminal 2.
@@ -114,3 +123,5 @@ h3 iperf -s &
 * **The Dashboard** is your **Application Plane**. 
 
 By running these in order, you are following the proper initialization sequence of a Software Defined Network. If you follow these steps, your dashboard will reflect every `iperf` and `ping` within 2 seconds of the command being issued!
+
+```
